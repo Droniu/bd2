@@ -297,22 +297,16 @@ CREATE USER 'production'@'localhost' IDENTIFIED BY 'production';
 CREATE USER 'accountant'@'localhost' IDENTIFIED BY 'accountant';
 CREATE USER 'seller'@'localhost' IDENTIFIED BY 'seller';
 
-CREATE ROLE 'db_owner', 'db_production', 'db_accountant', 'db_seller';
-
 GRANT ALL ON database_.* TO 'owner'@'localhost';
 
-GRANT ALL ON database_.Supplier TO 'db_production';
-GRANT ALL ON database_.Part TO 'db_production';
-GRANT UPDATE ON database_.Order_ TO 'db_production';
-GRANT UPDATE ON database_.Car TO 'db_production';
+GRANT ALL ON database_.Supplier TO 'production'@'localhost';
+GRANT ALL ON database_.Part TO 'production'@'localhost';
+GRANT ALL ON database_.Order_ TO 'production'@'localhost';
+GRANT ALL ON database_.Car TO 'production'@'localhost';
 
 GRANT ALL ON database_.Client_ TO 'seller'@'localhost';
 GRANT ALL ON database_.Order_ TO 'seller'@'localhost';
 GRANT ALL ON database_.Car TO 'seller'@'localhost';
 
-GRANT ALL ON database_.Payment TO 'db_accountant';
-
-GRANT 'db_owner' TO 'owner'@'localhost';
-GRANT 'db_seller' TO 'seller'@'localhost';
-GRANT 'db_accountant' TO 'accountant'@'localhost';
-GRANT 'db_production' TO 'production'@'localhost';
+GRANT ALL ON database_.Order_ TO 'accountant'@'localhost';
+GRANT ALL ON database_.Payment TO 'accountant'@'localhost';

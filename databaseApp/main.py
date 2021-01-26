@@ -6,11 +6,6 @@
 ##
 ################################################################################
 
-from PySide2 import QtCore, QtGui, QtWidgets
-from PySide2.QtCore import (QCoreApplication, QPropertyAnimation, QDate, QDateTime, QMetaObject, QObject, QPoint, QRect,
-                            QSize, QTime, QUrl, Qt, QEvent)
-from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont, QFontDatabase, QIcon, QKeySequence,
-                           QLinearGradient, QPalette, QPainter, QPixmap, QRadialGradient)
 from PySide2.QtWidgets import *
 
 # IMPORT FUNCTIONS
@@ -62,6 +57,7 @@ class MainWindow(QMainWindow):
                                                 database='database_')
 
             self.sql = SQLEditor(self.mydb, self.ui)
+            self.sql.__init__(self.mydb, self.ui)
             self.isLogged = True
 
 
@@ -77,17 +73,20 @@ class MainWindow(QMainWindow):
     def logout(self):
         if self.isLogged:
             self.mydb.close()
+            del self.sql
             self.ui.logged_person.setText("")
             self.isLogged = False
         self.ui.login.setText("")
         self.ui.password.setText("")
-        self.ui.logout.clicked.connect(lambda: self.ui.pages.setCurrentWidget(self.ui.page_login))
+        self.ui.logout.clicked.connect( self.ui.pages.setCurrentWidget(self.ui.page_login))
 
     def no_access(self):
         if not self.isLogged:
             access_message = "Musisz najpierw się zalogować."
         else:
             access_message = "Nie masz dostępu do tej części bazy danych."
+            print(self.sql.user)
+            print(self.isLogged)
         messagebox = QMessageBox()
         messagebox.critical(self, "Błąd dostępu", access_message)
         messagebox.setFixedSize(500, 200)
@@ -95,7 +94,7 @@ class MainWindow(QMainWindow):
     def set_money(self):
         if not self.isLogged:
             self.no_access()
-        elif self.sql.user == ("owner@localhost" or "accountant@localhost"):
+        elif self.sql.user == "owner@localhost" or self.sql.user == "accountant@localhost":
             self.ui.pages.setCurrentWidget(self.ui.page_money)
         else:
             self.no_access()
@@ -103,7 +102,7 @@ class MainWindow(QMainWindow):
     def set_parts(self):
         if not self.isLogged:
             self.no_access()
-        elif self.sql.user == ("owner@localhost" or "production@localhost"):
+        elif self.sql.user == "owner@localhost" or self.sql.user == "production@localhost":
             self.ui.pages.setCurrentWidget(self.ui.page_parts)
         else:
             self.no_access()
@@ -111,7 +110,7 @@ class MainWindow(QMainWindow):
     def set_orders(self):
         if not self.isLogged:
             self.no_access()
-        elif self.sql.user == ("owner@localhost" or "accountant@localhost" or "seller@localhost"):
+        elif self.sql.user == "owner@localhost" or self.sql.user == "accountant@localhost" or self.sql.user == "seller@localhost":
             self.ui.pages.setCurrentWidget(self.ui.page_orders)
         else:
             self.no_access()
@@ -119,7 +118,7 @@ class MainWindow(QMainWindow):
     def set_cars(self):
         if not self.isLogged:
             self.no_access()
-        elif self.sql.user == ("owner@localhost" or "production@localhost" or "seller@localhost"):
+        elif self.sql.user == "owner@localhost" or self.sql.user == "production@localhost" or self.sql.user == "seller@localhost":
             self.ui.pages.setCurrentWidget(self.ui.page_cars)
         else:
             self.no_access()
@@ -127,7 +126,7 @@ class MainWindow(QMainWindow):
     def set_clients(self):
         if not self.isLogged:
             self.no_access()
-        elif self.sql.user == ("owner@localhost" or "seller@localhost"):
+        elif self.sql.user == "owner@localhost" or self.sql.user == "seller@localhost":
             self.ui.pages.setCurrentWidget(self.ui.page_clients)
         else:
             self.no_access()
